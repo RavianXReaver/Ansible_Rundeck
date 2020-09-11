@@ -1,0 +1,27 @@
+---
+- name: Load variable files
+  include_vars: "vars/shell_{{ ansible_distribution }}.yml"
+
+- name: Configure Rundeck apt repo
+  shell: "{{ SHELL_COMMAND }}"       
+  register: repo_exists
+  failed_when: repo_exists.rc != 1 and repo_exists.rc != 0   
+
+- name: Install Rundeck.
+  package:
+    name: rundeck
+    state: present
+      
+- name: "Remove redirection to localhost in Rundeck-config.properties"
+  lineinfile:
+    path: /etc/rundeck/rundeck-config.properties
+    state: present
+    regexp: "^grails.serverURL=http://localhost:4440$"  
+    line: '#'
+    backrefs: true
+
+- name: Start Rundeck Service
+  service:
+    name: rundeckd
+    state: started
+    enabled: true

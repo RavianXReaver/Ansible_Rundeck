@@ -1,0 +1,11 @@
+---
+
+- name: Load Variable files.
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "vars/java_{{ ansible_distribution }}.yml"
+
+- name: Install open-jdk-8-jdk
+  package: 
+    name: "{{ JAVA_PACKAGE }}"
+    state: present

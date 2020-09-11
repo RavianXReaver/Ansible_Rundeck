@@ -1,0 +1,13 @@
+---
+- name: Install Rundeck
+  hosts: all
+  become: yes
+
+  tasks:   
+    - name: Install compatible java version to run Rundeck
+      import_role: 
+        name: rundeck_java
+    
+    - name: Install and configure Rundeck
+      import_role: 
+        name: Rundeck     
